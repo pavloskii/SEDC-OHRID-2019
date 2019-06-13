@@ -1,0 +1,40 @@
+<div class="row card">
+  <div class="col-md-12 cursor-pointer mb-3" id="ads"></div>
+</div>
+
+<script>
+  //On click on the ads open the content of the advertisement in a new tab
+  //in the browser
+  function openAdvertisement(url) {
+    window.open(url);
+  }
+  $(document).ready(function() {
+    const token = localStorage.getItem("token");
+    //The url for fetting the ads and ofcourse we also send the token from localstorage
+    const adsUrl =
+      "https://sedc-ohrid.firebaseio.com/academy/ads.json?auth=" + token;
+
+    $.get(adsUrl, function(ads) {
+      Object.keys(ads).forEach(function(key) {
+        let ad = ads[key];
+
+        //For every AD append on an image in the #ads div
+        $("#ads").append(`
+        <div class="col-md-12 cursor-pointer mb-3">
+          <img
+            src="${ad.image}"
+            class="card-img-top"
+            onclick="openAdvertisement('${ad.link}')"
+          />
+        </div>
+      `);
+      });
+    });
+  });
+</script>
+
+<style>
+  .cursor-pointer {
+    cursor: pointer;
+  }
+</style>

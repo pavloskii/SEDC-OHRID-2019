@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Uploading Image to a server (firebase example)</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <form onsubmit="submitFormToServer(event)">
+      <!-- Ja povikuvame convertImageToBase64 na promena vo inputot (odbiranjeto file e promena) 
+        Dokolku sakate da mu dadete poubav izgled na ovoj input za file upload,
+        moze da go wrapuvate vo label element i da mu stavite nekoj css na labelot-->
+      <input type="file" onchange="convertImageToBase64(this, 0.3, 300)" />
+      <img id="selected-image" class="image" name="the-image" />
+
+      <input type="text" name="first-name" />
+      <input type="text" name="last-name" />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <script src="upload-image.js"></script>
+    <script>
+      function submitFormToServer(event) {
+        event.preventDefault();
+        var url = "https://sedc-ohrid.firebaseio.com/sedc-gram/posts.json";
+        var form = event.target;
+
+        var user = {
+          firstName: form["first-name"].value,
+          lastName: form["last-name"].value,
+          profileImage: form["the-image"].src
+        };
+
+        fetch(url, {
+          method: "POST",
+          body: JSON.stringify(user)
+        })
+          .then(function(res) {
+            if (res.ok) {
+              return res.json();
+            }
+            throw new Error("Some error happened!");
+          })
+          .then(function(data) {
+            alert("The user was created with id: " + data.name);
+          })
+          .catch(function(err) {
+            alert("ERROR: " + err.message);
+          });
+      }
+    </script>
+  </body>
+</html>

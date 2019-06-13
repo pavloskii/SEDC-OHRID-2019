@@ -1,0 +1,97 @@
+<div class="login-page">
+  <div class="text-center mb-2">
+    <img src="images/logo.png" height="100" />
+  </div>
+  <div class="card xy-center">
+    <div class="card-body">
+      <form onsubmit="login(event)">
+        <div class="form-group row">
+          <label for="loginEmail" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="loginEmail" />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="loginPassword" class="col-sm-2 col-form-label"
+            >Password</label
+          >
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="loginPassword" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary btn-lg btn-block">
+          Login
+        </button>
+      </form>
+      <!-- Go to register -->
+      <p class="mt-3">
+        Dont have an account?
+        <a href onclick="goToPage(event, 'register')">Register</a>
+      </p>
+      <!-- div to show alerts/errors in-->
+      <div class="mt-3" id="errors"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function login(event) {
+    event.preventDefault();
+
+    const loginURL =
+      "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyC5cVNE7BftpdOSeSD4KKNYbxha4EJmrQc";
+
+    var email = $("#loginEmail").val();
+    var password = $("#loginPassword").val();
+    if (!email || !password) {
+      $("#errors").html(`
+         <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Warning!</strong> You need to fill all the inputs first!
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        `);
+    }
+
+    // $.ajax({
+    //   url: loginURL,
+    //   type: "POST",
+    //   data: { email: email, password: password },
+    //   success: function(data) {
+    //     console.log(data);
+    //     localStorage.setItem("email", data.email);
+    //     localStorage.setItem("token", data.idToken);
+
+    //     $("#main-content").load("./home.html");
+    //     $("#right-column").load(`../components/advertisements.html`);
+    //   }
+    // });
+    $.post(loginURL, { email: email, password: password }, function(data) {
+      localStorage.setItem("email", data.email);
+      localStorage.setItem("token", data.idToken);
+
+      $("#main-content").load("./home.html");
+      $("#right-column").load(`../components/advertisements.html`);
+    });
+  }
+</script>
+
+<style>
+  .login-page {
+    background-color: #0087cd;
+    padding: 25px;
+    padding-bottom: 50px;
+  }
+
+  .login-page .card {
+    max-width: 700px;
+  }
+
+  .xy-center {
+    margin: auto;
+    padding: 10px;
+  }
+</style>
